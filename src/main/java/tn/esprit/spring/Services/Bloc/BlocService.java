@@ -93,5 +93,12 @@ public class BlocService implements IBlocService {
         //On affecte le child au parent
         b.setFoyer(f);
         return blocRepository.save(b);
+
+
+
+
+
+
+        
     }
 }
