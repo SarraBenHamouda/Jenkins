@@ -8,7 +8,16 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/kenza-20/Devops-projet.git'
+                script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: 'sarra-dev']], 
+                        userRemoteConfigs: [[
+                            url: 'https://github.com/kenza-20/Devops-projet.git',
+                            credentialsId: 'github-credentials'
+                        ]]
+                    ])
+                }
             }
         }
 
