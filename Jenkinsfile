@@ -14,7 +14,7 @@ pipeline {
                         branches: [[name: 'sarra-dev']], 
                         userRemoteConfigs: [[
                             url: 'https://github.com/kenza-20/Devops-projet.git',
-                            credentialsId: 'github-credentials'
+                            credentialsId: 'O'
                         ]]
                     ])
                 }
