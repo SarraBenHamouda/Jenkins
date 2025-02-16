@@ -1,32 +1,37 @@
 pipeline {
     agent any
-    stages {
-        stage('Checkout') {
-            steps {
-                git credentialsId: 'git-credentials', branch: 'sarra-dev', 
-                    url: 'https://github.com/kenza-20/Devops-projet.git'
-            }
-        }
 
-        stage('Clean Workspace') {
-            steps {
-                sh 'mvn clean'
-            }
-        }
-
-        stage('Build Project') {
-            steps {
-                sh 'mvn package'
-            }
-        }
+    environment {
+        DOCKER_IMAGE = "sarra7/my-nginx:latest"
     }
-    
-    post {
-        failure {
-            echo 'Build failed! Check logs for errors.'
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/kenza-20/Devops-projet.git'
+            }
         }
-        success {
-            echo 'Build completed successfully.'
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t my-nginx .'
+                sh 'docker tag my-nginx ${DOCKER_IMAGE}'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+                    sh 'docker push ${DOCKER_IMAGE}'
+                }
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                sh 'docker rm -f my-nginx-container || true'
+                sh 'docker run -d -p 8080:80 --name my-nginx-container ${DOCKER_IMAGE}'
+            }
         }
     }
 }
