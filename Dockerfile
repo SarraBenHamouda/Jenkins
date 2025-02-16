@@ -1,15 +1,15 @@
-# Utiliser Alpine comme base
-FROM alpine:latest
+# Use a lightweight Java image instead of installing manually
+FROM openjdk:11-jdk-slim
 
-# Installer OpenJDK 11
-RUN apk add --no-cache openjdk11
+# Set working directory inside the container
+WORKDIR /app
 
-# Définir JAVA_HOME (facultatif mais recommandé)
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
-ENV PATH="$JAVA_HOME/bin:$PATH"
+# Copy a Java file or JAR (optional)
+# COPY MyApp.java /app/
+# COPY myapp.jar /app/
 
-# Exposer le port 80 (optionnel)
+# Expose port 80 (if needed)
 EXPOSE 80
 
-# Exécuter Java
+# Run Java version check
 CMD ["java", "-version"]
