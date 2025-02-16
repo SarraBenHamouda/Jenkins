@@ -21,6 +21,24 @@ pipeline {
             }
         }
 
+        stage('Setup Maven') {
+            steps {
+                sh 'echo "Setting up Maven..."'
+            }
+        }
+
+        stage('Maven Build') {
+            steps {
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                sh 'mvn test' 
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t ${DOCKER_IMAGE} .'  
@@ -38,7 +56,7 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 script {
-                    
+                    // Stop and remove the existing container safely
                     sh """
                     if docker ps -aq -f name=my-nginx-container | grep -q .; then
                         docker stop my-nginx-container || true
@@ -46,11 +64,10 @@ pipeline {
                     fi
                     """
 
-
+                    // Run the new container with auto-restart
                     sh 'docker run -d --restart=always -p 8081:80 --name my-nginx-container ${DOCKER_IMAGE}'
                 }
             }
         }
     }
 }
-//RAHOUUU SAR FEYYAA
