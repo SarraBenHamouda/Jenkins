@@ -2,8 +2,30 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:latest
+    image: mysql:5.7
+    container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD:  # ✅ Required for MySQL to start
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: foyer
     ports:
-      - "3306:3306"
+      - "3307:3306"
+    networks:
+      - tp-foyer-net
+
+  spring-boot-app:
+    image: sarra7/my-nginx:latest
+    container_name: my-nginx-container
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/foyer\
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 
+    depends_on:
+      - mysql
+    networks:
+      - tp-foyer-net
+
+networks:
+  tp-foyer-net:
+    driver: bridge
