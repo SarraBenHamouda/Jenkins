@@ -4,6 +4,6 @@ services:
   mysql:
     image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: root  # ✅ Required for MySQL to start
+      MYSQL_ROOT_PASSWORD:  # ✅ Required for MySQL to start
     ports:
       - "3306:3306"
