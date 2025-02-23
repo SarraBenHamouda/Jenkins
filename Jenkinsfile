@@ -52,22 +52,5 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy Container') {
-            steps {
-                script {
-                    // Stop and remove the existing container safely
-                    sh """
-                    if docker ps -aq -f name=my-nginx-container | grep -q .; then
-                        docker stop my-nginx-container || true
-                        docker rm my-nginx-container || true
-                    fi
-                    """
-
-                    // Run the new container with auto-restart
-                    sh 'docker run -d --restart=always -p 8081:80 --name my-nginx-container ${DOCKER_IMAGE}'
-                }
-            }
-        }
     }
 }
