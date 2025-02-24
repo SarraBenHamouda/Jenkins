@@ -4,28 +4,21 @@ services:
   mysql:
     image: mysql:latest
     container_name: mysql-container
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: foyer  # Match the name in your properties file
+      MYSQL_DATABASE: foyer
+      MYSQL_USER: sarra
+      MYSQL_PASSWORD: root
     ports:
-      - "3307:3306"
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
     networks:
-      - tp-foyer-net
+      - my_network
 
-  spring-boot-app:
-    image: sarra7/nginx:latest  # Make sure this is the correct Spring Boot image
-    container_name: nginx-container
-    ports:
-      - "8081:8081"
-    environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-container-new:3306/foyer?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
-    depends_on:
-      - mysql
-    networks:
-      - tp-foyer-net
+volumes:
+  mysql_data:
 
 networks:
-  tp-foyer-net:
-    driver: bridge
+  my_network:
