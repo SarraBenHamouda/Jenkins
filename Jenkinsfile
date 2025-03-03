@@ -40,27 +40,34 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_LOGIN')]) {
+                        sh 'mvn sonar:sonar -Dsonar.login=$SONAR_LOGIN'
+                    }
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t "${DOCKER_IMAGE}" .'
+                sh "docker build -t ${DOCKER_IMAGE} ."
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
                 withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-                    sh 'docker push "${DOCKER_IMAGE}"'
+                    sh "docker push ${DOCKER_IMAGE}"
                 }
             }
         }
-<<<<<<< HEAD
-=======
 
         stage('Run Tests with Spring Profile') {
             steps {
                 sh 'mvn test -Dspring.profiles.active=test'
             }
         }
->>>>>>> 4594b5a (test-unitaire)
     }
 }
