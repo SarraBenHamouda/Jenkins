@@ -11,10 +11,10 @@ pipeline {
                 script {
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: 'sarra-dev']], 
+                        branches: [[name: 'sarra-dev']],
                         userRemoteConfigs: [[
                             url: 'https://github.com/kenza-20/Devops-projet.git',
-                            credentialsId: 'git-credentials'  
+                            credentialsId: 'git-credentials'
                         ]]
                     ])
                 }
@@ -23,7 +23,6 @@ pipeline {
 
         stage('Setup Maven') {
             steps {
-                sh 'echo "Setting up Maven..."'
                 sh 'mvn --version'
             }
         }
@@ -48,7 +47,8 @@ pipeline {
                            mvn sonar:sonar \
                              -Dsonar.projectKey=devops-projet-key \
                              -Dsonar.host.url=http://192.168.169.32:9000 \
-                             -Dsonar.login=2f78cf146a16b840e4cce2319889a6d60c7cd7b5
+                             -Dsonar.login=$SONAR_LOGIN \
+                             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                         '''
                     }
                 }
@@ -72,6 +72,14 @@ pipeline {
         stage('Run Tests with Spring Profile') {
             steps {
                 sh 'mvn test -Dspring.profiles.active=test'
+            }
+        }
+    }
+
+    post {
+        failure {
+            script {
+                sh 'echo "Build Failed! Check logs for errors."'
             }
         }
     }
