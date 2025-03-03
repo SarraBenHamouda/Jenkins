@@ -24,7 +24,7 @@ pipeline {
         stage('Setup Maven') {
             steps {
                 sh 'echo "Setting up Maven..."'
-                sh 'mvn --version' // Verify Maven installation
+                sh 'mvn --version'
             }
         }
 
@@ -40,26 +40,31 @@ pipeline {
             }
         }
 
-            stage('SonarQube Analysis') {
-                    steps {
-                        withSonarQubeEnv('SonarQube') {
-                            withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_LOGIN')]) {
-                                sh 'mvn sonar:sonar -Dsonar.login=$SONAR_LOGIN'
-                            }
-                        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_LOGIN')]) {
+                        sh '''
+                           mvn sonar:sonar \
+                             -Dsonar.projectKey=devops-projet-key \
+                             -Dsonar.host.url=http://192.168.169.32:9000 \
+                             -Dsonar.login=2f78cf146a16b840e4cce2319889a6d60c7cd7b5
+                        '''
                     }
                 }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t "${DOCKER_IMAGE}" .'
+                sh "docker build -t ${DOCKER_IMAGE} ."
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
                 withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-                    sh 'docker push "${DOCKER_IMAGE}"'
+                    sh "docker push ${DOCKER_IMAGE}"
                 }
             }
         }
@@ -69,6 +74,5 @@ pipeline {
                 sh 'mvn test -Dspring.profiles.active=test'
             }
         }
-
     }
 }
