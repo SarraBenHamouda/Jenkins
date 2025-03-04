@@ -47,7 +47,7 @@ pipeline {
                            mvn sonar:sonar \
                              -Dsonar.projectKey=devops-projet-key \
                              -Dsonar.host.url=http://192.168.169.32:9000 \
-                             -Dsonar.login=$SONAR_LOGIN \
+                             -Dsonar.login=2f78cf146a16b840e4cce2319889a6d60c7cd7b5 \
                              -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                         '''
                     }
