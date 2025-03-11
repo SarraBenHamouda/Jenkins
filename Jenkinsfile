@@ -69,6 +69,21 @@ pipeline {
             }
         }
 
+        stage('Deploy to Nexus') {
+            steps {
+                withCredentials([
+                    usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'admin', passwordVariable: 'sarra')
+                ]) {
+                    sh '''
+                        mvn deploy \
+                          -DaltDeploymentRepository=nexus-releases::default::http://localhost:8081/repository/maven-releases/ \
+                          -Dnexus.user=$NEXUS_USER \
+                          -Dnexus.password=$NEXUS_PASS
+                    '''
+                }
+            }
+        }
+
         stage('Run Tests with Spring Profile') {
             steps {
                 sh 'mvn test -Dspring.profiles.active=test'
