@@ -87,7 +87,7 @@
 
     </dependencies>
 
-    <!-- 🔹 Nexus Repository Configuration -->
+    <!--  Nexus Repository Configuration -->
     <distributionManagement>
         <repository>
             <id>nexus-releases</id>
