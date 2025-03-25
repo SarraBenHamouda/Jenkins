@@ -90,7 +90,7 @@
     <!--  Nexus Repository Configuration -->
     <distributionManagement>
         <repository>
-            <id>nexus-releases</id>
+            <id>deployementRepo</id>
             <url>http://localhost:8081/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>

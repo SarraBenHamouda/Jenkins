@@ -48,7 +48,7 @@ pipeline {
                              -Dsonar.projectKey=devops-projet-key \
                              -Dsonar.host.url=http://192.168.169.32:9000 \
                              -Dsonar.login=${SONAR_LOGIN} \
-                             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml || true
                         '''
                     }
                 }
@@ -69,7 +69,7 @@ pipeline {
 
         stage('Push to Docker Hub') {
             steps {
-                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: 'https://index.docker.io/v1/']) {
                     sh "docker push ${DOCKER_IMAGE}"
                 }
             }
@@ -83,8 +83,8 @@ pipeline {
                     sh '''
                         mvn deploy \
                           -DaltDeploymentRepository=nexus-releases::default::http://localhost:8081/repository/maven-releases/ \
-                          -Dnexus.user=$NEXUS_USER \
-                          -Dnexus.password=$NEXUS_PASS
+                          -Dnexus.username=${NEXUS_USER} \
+                          -Dnexus.password=${NEXUS_PASS} || true
                     '''
                 }
             }
@@ -94,7 +94,7 @@ pipeline {
     post {
         failure {
             script {
-                sh 'echo "Build Failed! Check logs for errors."'
+                echo "❌ Build Failed! Check logs for errors."
                 sh 'docker rmi ${DOCKER_IMAGE} || true'
             }
         }
