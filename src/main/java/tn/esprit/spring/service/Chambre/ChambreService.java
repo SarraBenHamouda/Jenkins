@@ -33,7 +33,8 @@ public class ChambreService implements IChambreService {
 
     @Override
     public Chambre findById(long id) {
-        return repo.findById(id).get();
+        return repo.findById(id).orElse(null); // Or throw a custom exception if not found
+
     }
 
     @Override
@@ -118,15 +119,21 @@ public class ChambreService implements IChambreService {
     @Override
     public void pourcentageChambreParTypeChambre() {
         long totalChambre = repo.count();
-        double pSimple = (repo.countChambreByTypeC(TypeChambre.SIMPLE) * 100) / totalChambre;
-        double pDouble = (repo.countChambreByTypeC(TypeChambre.DOUBLE) * 100) / totalChambre;
-        double pTriple = (repo.countChambreByTypeC(TypeChambre.TRIPLE) * 100) / totalChambre;
-        log.info("Nombre total des chambre: " + totalChambre);
-        log.info("Le pourcentage des chambres pour le type SIMPLE est égale à " + pSimple);
-        log.info("Le pourcentage des chambres pour le type DOUBLE est égale à " + pDouble);
-        log.info("Le pourcentage des chambres pour le type TRIPLE est égale à " + pTriple);
+        if (totalChambre == 0) {
+            log.info("Aucune chambre disponible pour calculer les pourcentages.");
+            return;
+        }
 
+        double pSimple = (repo.countChambreByTypeC(TypeChambre.SIMPLE) * 100.0) / totalChambre;
+        double pDouble = (repo.countChambreByTypeC(TypeChambre.DOUBLE) * 100.0) / totalChambre;
+        double pTriple = (repo.countChambreByTypeC(TypeChambre.TRIPLE) * 100.0) / totalChambre;
+
+        log.info("Nombre total des chambres: " + totalChambre);
+        log.info("Le pourcentage des chambres pour le type SIMPLE est égal à " + pSimple + "%");
+        log.info("Le pourcentage des chambres pour le type DOUBLE est égal à " + pDouble + "%");
+        log.info("Le pourcentage des chambres pour le type TRIPLE est égal à " + pTriple + "%");
     }
+
 
     @Override
     public void nbPlacesDisponibleParChambreAnneeEnCours() {
