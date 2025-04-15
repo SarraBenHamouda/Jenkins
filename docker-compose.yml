@@ -1,24 +1,47 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:latest
-    container_name: mysql-container
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: foyer
-      MYSQL_USER: sarra
-      MYSQL_PASSWORD: root
+  # SonarQube service using H2 database
+  sonarqube:
+    image: sonarqube:8.9.7-community
+    container_name: sonarqube
     ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
+      - "9000:9000"
+    environment:
+      - SONARQUBE_JDBC_URL=jdbc:h2:mem:sonar;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     networks:
-      - my_network
+      - app-network
 
-volumes:
-  mysql_data:
+  # Foyer Application using H2 database
+  foyer-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: foyer-app
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:foyer;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.H2Dialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SERVER_PORT=8082
+      - SERVER_SERVLET_CONTEXT_PATH=/Foyer
+    depends_on:
+      - sonarqube
+    networks:
+      - app-network
+
+  # Nexus for repository management
+  nexus:
+    image: sonatype/nexus3
+    container_name: nexus
+    ports:
+      - "8081:8081"
+    networks:
+      - app-network
 
 networks:
-  my_network:
+  app-network:
+    driver: bridge
