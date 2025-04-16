@@ -93,10 +93,8 @@ pipeline {
 
     post {
         failure {
-            node {
-                echo "❌ Build Failed! Check logs for errors."
-                sh "docker rmi ${DOCKER_IMAGE} || true"
-            }
+            echo "❌ Build Failed! Check logs for errors."
+            sh "docker rmi ${DOCKER_IMAGE} || true"
         }
     }
 }
