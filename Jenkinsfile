@@ -94,7 +94,10 @@ pipeline {
     post {
         failure {
             echo "❌ Build Failed! Check logs for errors."
-            sh "docker rmi ${DOCKER_IMAGE} || true"
+            script {
+                def img = env.DOCKER_IMAGE ?: "sarra7/my-nginx:latest"
+                sh "docker rmi ${img} || true"
+            }
         }
     }
 }
