@@ -4,16 +4,20 @@ pipeline {
     environment {
         DOCKER_IMAGE = "sarra7/my-nginx:latest"
     }
- stages {
-        stage('GIT') {
+
+    stages {
+        stage('Clone Repository') {
             steps {
-                git branch: 'sarra',
-                    url: 'https://github.com/SarraBenHamouda/Jenkins.git'
-            }
-        }
-            stage('Compile Stage') {
-            steps {
-                sh 'mvn clean compile'
+                script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: 'sarra-dev']],
+                        userRemoteConfigs: [[
+                            url: 'https://github.com/kenza-20/Devops-projet.git',
+                            credentialsId: 'git-credentials'
+                        ]]
+                    ])
+                }
             }
         }
 
