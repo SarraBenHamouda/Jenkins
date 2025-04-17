@@ -1,0 +1,58 @@
+package tn.esprit.spring.restcontrollers;
+
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import tn.esprit.spring.dao.entities.Chambre;
+import tn.esprit.spring.dao.entities.typeChambre;
+import tn.esprit.spring.service.chambre.IChambreService;
+
+import java.util.List;
+
+
+
+@RestController
+@RequestMapping("chambre")
+@AllArgsConstructor
+public class ChambreRestController {
+    IChambreService service;
+
+    @PostMapping("addOrUpdate")
+    Chambre addOrUpdate(@RequestBody Chambre c) {
+        return service.addOrUpdate(c);
+    }
+
+    @GetMapping("findAll")
+    List<Chambre> findAll() {
+        return service.findAll();
+    }
+
+    @GetMapping("findById")
+    Chambre findById(@RequestParam long id) {
+        return service.findById(id);
+    }
+
+    @DeleteMapping("delete")
+    void delete(@RequestBody Chambre c) {
+        service.delete(c);
+    }
+
+    @DeleteMapping("deleteById")
+    void deleteById(@RequestParam long id) {
+        service.deleteById(id);
+    }
+
+    @GetMapping("getChambresParNomBloc")
+    public List<Chambre> getChambresParNomBloc(@RequestParam String nomBloc) {
+        return service.getChambresParNomBloc(nomBloc);
+    }
+
+    @GetMapping("nbChambreParTypeEtBloc")
+    long nbChambreParTypeEtBloc(@RequestParam typeChambre type, @RequestParam long idBloc) {
+        return service.nbChambreParTypeEtBloc(type, idBloc);
+    }
+
+    @GetMapping("getChambresNonReserveParNomFoyerEtTypeChambre")
+    List<Chambre> getChambresNonReserveParNomFoyerEtTypeChambre(@RequestParam String nomFoyer,@RequestParam typeChambre type){
+        return service.getChambresNonReserveParNomFoyerEtTypeChambre(nomFoyer,type);
+    }
+}

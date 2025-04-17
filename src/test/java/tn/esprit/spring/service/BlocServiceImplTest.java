@@ -8,9 +8,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import tn.esprit.spring.DAO.Entities.Bloc;
-import tn.esprit.spring.DAO.Repositories.BlocRepository;
-import tn.esprit.spring.service.Bloc.BlocService;
+import tn.esprit.spring.dao.entities.Bloc;
+import tn.esprit.spring.dao.repositories.BlocRepository;
+import tn.esprit.spring.service.bloc.BlocService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
