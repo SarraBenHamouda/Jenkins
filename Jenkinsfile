@@ -44,9 +44,9 @@ pipeline {
                 withSonarQubeEnv('SonarQube') {
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_LOGIN')]) {
                         sh '''
-                           mvn sonar:sonar \
-                             -Dsonar.projectKey=devops-projet-key \
-                             -Dsonar.host.url=http://localhost:9000 \
+                             mvn sonar:sonar \
+                               -Dsonar.projectKey=devops-projet \
+                               -Dsonar.host.url=http://localhost:9000 \
                              -Dsonar.login=${SONAR_LOGIN} \
                              -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml || true
                         '''
