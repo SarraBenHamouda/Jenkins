@@ -6,13 +6,6 @@ pipeline {
     }
 
     stages {
-        stage('Git Config Fix') {
-            steps {
-                sh 'git config --global http.version HTTP/1.1'
-                sh 'git config --global http.postBuffer 524288000' // Optional: 500MB buffer
-            }
-        }
-
         stage('Clone Repository') {
             steps {
                 script {
@@ -22,8 +15,7 @@ pipeline {
                         userRemoteConfigs: [[
                             url: 'https://github.com/kenza-20/Devops-projet.git',
                             credentialsId: 'git-credentials'
-                        ]],
-                        extensions: [[$class: 'CloneOption', depth: 1, shallow: true]]
+                        ]]
                     ])
                 }
             }
