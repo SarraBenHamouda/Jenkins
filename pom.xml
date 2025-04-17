@@ -55,11 +55,11 @@
             <version>2.0.0</version>
         </dependency>
 
-        <!-- H2 Database pour les tests -->
+        <!-- H2 Database pour les tests (changed scope to runtime) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Spring Boot Starter Validation -->
