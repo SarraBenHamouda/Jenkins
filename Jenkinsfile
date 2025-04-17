@@ -11,9 +11,9 @@ pipeline {
                 script {
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: 'sarra']],
+                        branches: [[name: 'sarra-dev']],
                         userRemoteConfigs: [[
-                            url: 'https://github.com/SarraBenHamouda/Jenkins.git',
+                            url: 'https://github.com/kenza-20/Devops-projet.git',
                             credentialsId: 'git-credentials'
                         ]]
                     ])
@@ -94,7 +94,7 @@ pipeline {
     post {
         failure {
             script {
-                echo "❌ Build Failed! Check logs for errors."
+                echo "Build Failed! Check logs for errors."
                 sh 'docker rmi ${DOCKER_IMAGE} || true'
             }
         }
