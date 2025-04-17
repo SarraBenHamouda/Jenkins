@@ -11,9 +11,9 @@ pipeline {
                 script {
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: 'sarra-dev']],
+                        branches: [[name: '*/sarra']],
                         userRemoteConfigs: [[
-                            url: 'https://github.com/kenza-20/Devops-projet.git',
+                            url: 'https://github.com/SarraBenHamouda/Jenkins.git',
                             credentialsId: 'git-credentials'
                         ]]
                     ])
