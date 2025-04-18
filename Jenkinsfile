@@ -47,7 +47,7 @@ pipeline {
                            mvn sonar:sonar \
                              -Dsonar.projectKey=devops-projet \
                              -Dsonar.host.url=http://localhost:9000 \
-                             -Dsonar.login=e156ee25c595f8687b68568d8348b1113ef792c4
+                             -Dsonar.login=e156ee25c595f8687b68568d8348b1113ef792c4 \
                              -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml || true
                         '''
                     }
@@ -96,6 +96,22 @@ pipeline {
             script {
                 echo "Build Failed! Check logs for errors."
                 sh 'docker rmi ${DOCKER_IMAGE} || true'
+
+                // Envoi d'un email en cas d'échec
+                emailext (
+                    to: 'sarrabenhamouda7@gmail.com',
+                    subject: "Échec du pipeline Jenkins : ${env.JOB_NAME} - ${env.BUILD_NUMBER}",
+                    body: """
+                    Le pipeline Jenkins a échoué. Voici les détails :
+
+                    Nom du Job: ${env.JOB_NAME}
+                    Numéro de la build: ${env.BUILD_NUMBER}
+                    Cause de l'échec: ${currentBuild.result}
+
+                    Pour plus de détails, consultez les logs du job.
+                    """,
+                    mimeType: 'text/html'
+                )
             }
         }
     }
